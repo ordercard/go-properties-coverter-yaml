@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
@@ -11,7 +10,7 @@ import (
 )
 
 func main() {
-	//for i:=0;i<10000 ; i++ {
+	//for i:=0;i<1000 ; i++ {
 		var in string= "/Users/hq/go/src/gotest/src/company/test.properties"
 		pmap := getpropertiesMap(in)
 		resmap:=map[string]interface{}{}
@@ -26,19 +25,20 @@ func main() {
 			//每次新加入一行都需要进行调整已经生成的结果
 			updateMap(resmap,tempmap)
 		}
-		c,_:=json.Marshal(resmap)
-		fmt.Println(string(c))
+	//	c,_:=json.Marshal(resmap)
+	//	fmt.Println(string(c))
 		//ss:=map[string]interface{}{}
 
 		processlist(&resmap)
 
-		cc,_:=json.Marshal(&resmap)
-		fmt.Println(string(cc))
+	//	cc,_:=json.Marshal(&resmap)
+	//	fmt.Println(string(cc))
 		d, _ := yaml.Marshal(&resmap)
 		fmt.Println(string(d))
 		ioutil.WriteFile("/Users/hq/go/src/gotest/src/company/test.yaml",d,os.ModePerm)
 //	}
 }
+
 func updateMap( omap map[string]interface{},desmap map[string]interface{}) map[string]interface{} {
 	for k,v:= range desmap {
 
@@ -97,59 +97,27 @@ func processlist(resMap *map[string]interface{}) {
 		if st(resMap) {
 			return
 		}
-		if st(v) {
+		if st(v)  {
 			count--;
-			if count==0 {
+			if count<=0 {
 				return
 			}
 		continue
 		}
-		count--;
-		if count ==0 || st(v) || intert(t) {
-			return
+		if intert(v) {
+			continue
 		}
 		x:=v.(map[string]interface{})
 			processlist(&x)
+		count--;
+		if count ==0 {
+			return
+		}
 	}
 
 
 }
 
-/** error function
-func processlist(resmap map[string]interface{})  map[string]interface{} {
-		{
-
-			for k,v:= range resmap {
-			if strings.Contains(k,"[",) && strings.Contains(k,"]") && (strings.LastIndex(k,"]")== len(k)) {
-			x,ok:=omap[string([]rune(k)[:len(k)])]
-			if ok {
-			x = append(x.([]interface{}), v)
-
-		}else {
-			x = append(x.([]interface{}), v)
-			omap[string([]rune(k)[:len(k)])]=x
-		}
-		} else {
-				if t(v) {
-					x,ok:=omap[k]
-					if ok {
-						omap[k] = processlist(x.(map[string]interface{}),v.(map[string]interface{}))
-					} else {
-						omap[k] = 	processlist(map[string]interface{}{},v.(map[string]interface{}))
-					}
-				} else {//终止条件
-					//后者覆盖前者.
-					omap[k]=resmap[k]
-
-				}
-
-			}
-		}
-	}
-	return omap
-}
-*/
-//
 func intert(i interface{})bool {    //函数t 有一个参数i
 	switch i.(type) {      //多选语句switch
 	//主要用到了这个格式
