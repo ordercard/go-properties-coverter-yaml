@@ -11,31 +11,33 @@ import (
 )
 
 func main() {
-	var in string= "/Users/hq/go/src/gotest/src/company/test.properties"
-	pmap := getpropertiesMap(in)
-	resmap:=map[string]interface{}{}
-	for k,v:= range pmap {
-		skeys:= strings.Split(k,".")
-		tempmap:=map[string]interface{}{}
-		tempmap[skeys[len(skeys)-1]]=v
-		var i int = len(skeys) -2
-		for ;i>=0 ;i--  {
-			tempmap= map[string]interface{}{skeys[i]:tempmap}
+	//for i:=0;i<10000 ; i++ {
+		var in string= "/Users/hq/go/src/gotest/src/company/test.properties"
+		pmap := getpropertiesMap(in)
+		resmap:=map[string]interface{}{}
+		for k,v:= range pmap {
+			skeys:= strings.Split(k,".")
+			tempmap:=map[string]interface{}{}
+			tempmap[skeys[len(skeys)-1]]=v
+			var i int = len(skeys) -2
+			for ;i>=0 ;i--  {
+				tempmap= map[string]interface{}{skeys[i]:tempmap}
+			}
+			//每次新加入一行都需要进行调整已经生成的结果
+			updateMap(resmap,tempmap)
 		}
-		//每次新加入一行都需要进行调整已经生成的结果
-		updateMap(resmap,tempmap)
-	}
-	c,_:=json.Marshal(resmap)
-	fmt.Println(string(c))
-	//ss:=map[string]interface{}{}
+		c,_:=json.Marshal(resmap)
+		fmt.Println(string(c))
+		//ss:=map[string]interface{}{}
 
-	processlist(&resmap)
+		processlist(&resmap)
 
-	cc,_:=json.Marshal(&resmap)
-	fmt.Println(string(cc))
-	d, _ := yaml.Marshal(&resmap)
-	fmt.Println(string(d))
-	ioutil.WriteFile("/Users/hq/go/src/gotest/src/company/test.yaml",d,os.ModePerm)
+		cc,_:=json.Marshal(&resmap)
+		fmt.Println(string(cc))
+		d, _ := yaml.Marshal(&resmap)
+		fmt.Println(string(d))
+		ioutil.WriteFile("/Users/hq/go/src/gotest/src/company/test.yaml",d,os.ModePerm)
+//	}
 }
 func updateMap( omap map[string]interface{},desmap map[string]interface{}) map[string]interface{} {
 	for k,v:= range desmap {
@@ -103,7 +105,7 @@ func processlist(resMap *map[string]interface{}) {
 		continue
 		}
 		count--;
-		if count==0 {
+		if count ==0 || st(v) || intert(t) {
 			return
 		}
 		x:=v.(map[string]interface{})
@@ -148,7 +150,14 @@ func processlist(resmap map[string]interface{})  map[string]interface{} {
 }
 */
 //
-
+func intert(i interface{})bool {    //函数t 有一个参数i
+	switch i.(type) {      //多选语句switch
+	//主要用到了这个格式
+	case []interface{}:
+		return true
+	}
+	return false
+}
 func st(i interface{})bool {    //函数t 有一个参数i
 	switch i.(type) {      //多选语句switch
 	//主要用到了这个格式
