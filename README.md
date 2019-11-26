@@ -1,6 +1,5 @@
 # go-properties-coverter-yaml
-   a properties -> yaml  format
-  
+   properties -> yaml  
 # prepare 
   ```java
   go get gopkg.in/yaml.v2
